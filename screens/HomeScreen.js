@@ -76,10 +76,10 @@ const HomeScreen = props => {
 
         // ON RELEASE HANDLER
         onPanResponderRelease: (evt, gestureState) => {
-            if (gestureState.dx < width / 4) {
+            if (Math.abs(gestureState.dx) < width / 4) {
                 Animated.spring(imagePos, {toValue : {x : 0, y : 0}, friction : 4}).start()
             } else {
-                Animated.spring(imagePos, {toValue : {x : width + 300, y : gestureState.dy}, duration : 400}).start(() => {
+                Animated.spring(imagePos, {toValue : {x : gestureState.dx > 0 ? width + 300 : -width - 300, y : gestureState.dy}, duration : 400}).start(() => {
                     setCurrentIndex(current => current - 1)
                 })
             }
