@@ -21,7 +21,11 @@ const cards = [
 
 const HomeScreen = props => {
     const imagePos = new Animated.ValueXY({x : 0, y : 0});
-    const [currentIndex, setCurrentIndex] = React.useState(0);
+    const [currentIndex, setCurrentIndex] = React.useState(cards.length - 1);
+
+    React.useEffect(() => {
+        imagePos.setValue({x : 0, y : 0})
+    }, [currentIndex])
 
     const rotate = imagePos.x.interpolate({
         inputRange : [-width / 2, 0, width / 2],
@@ -73,9 +77,11 @@ const HomeScreen = props => {
         // ON RELEASE HANDLER
         onPanResponderRelease: (evt, gestureState) => {
             if (gestureState.dx < width / 4) {
-                Animated.timing(imagePos, {toValue : {x : 0, y : 0}, duration : 500}).start()
+                Animated.spring(imagePos, {toValue : {x : 0, y : 0}, friction : 4}).start()
             } else {
-                setCurrentIndex(current => current + 1);
+                Animated.spring(imagePos, {toValue : {x : width + 300, y : gestureState.dy}, duration : 400}).start(() => {
+                    setCurrentIndex(current => current - 1)
+                })
             }
         },
     
@@ -84,7 +90,7 @@ const HomeScreen = props => {
     const renderCards = () => {
 
         return cards.map((card, i) => {
-            if (i < currentIndex) {
+            if (i > currentIndex) {
                 return null;
             } else if (i === currentIndex) {
                 return (
@@ -106,6 +112,14 @@ const HomeScreen = props => {
             } else {
                 return (
                     <Animated.View key={card.id} style={{...styles.imageContainer, opacity : backCardOpacity, transform : [{scale : backCardScale}]}} >
+                        <Animated.View style={{...styles.likeDislikeTextContainer, left : 50, borderColor : 'green', opacity : 0, transform : [{rotate : '-30deg'}]}}>
+                            <Text style={{color : 'green', fontSize : 32, fontWeight : '700'}}>LIKE</Text>
+                        </Animated.View>
+
+                        <Animated.View style={{...styles.likeDislikeTextContainer, right : 30, borderColor : 'red', opacity : 0, transform : [{rotate : '30deg'}]}}>
+                            <Text style={{color : 'red', fontSize : 30, fontWeight : '700'}}>DISLIKE</Text>
+                        </Animated.View>
+                        
                         <Image
                             source={card.path}
                             style={{...styles.image}}
@@ -116,7 +130,7 @@ const HomeScreen = props => {
 
 
         }
-        ).reverse();
+        )
     }
 
     return (
