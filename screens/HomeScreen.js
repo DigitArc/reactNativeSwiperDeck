@@ -111,7 +111,7 @@ const HomeScreen = props => {
                 )
             } else {
                 return (
-                    <Animated.View key={card.id} style={{...styles.imageContainer, opacity : backCardOpacity, transform : [{scale : backCardScale}]}} >
+                    <Animated.View key={card.id} {..._panResponder.panHandlers} style={{...styles.imageContainer, opacity : backCardOpacity, transform : [{scale : backCardScale}]}} >
                         <Animated.View style={{...styles.likeDislikeTextContainer, left : 50, borderColor : 'green', opacity : 0, transform : [{rotate : '-30deg'}]}}>
                             <Text style={{color : 'green', fontSize : 32, fontWeight : '700'}}>LIKE</Text>
                         </Animated.View>
