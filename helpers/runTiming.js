@@ -16,7 +16,9 @@ const {
     Extrapolate
   } = Animated;
 
-export const runTiming = (clock, value, dest, duration= 1000) => {
+export const runTiming = (value, dest, duration= 1000) => {
+  const clock = new Clock();
+  //instead of passing it I created a clock function that makes it more self contained.
     const state = {
       finished: new Value(0),
       position: new Value(0),
